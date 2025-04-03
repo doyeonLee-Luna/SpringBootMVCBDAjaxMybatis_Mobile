@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mycom.myapp.dao.SaleDao">
+
+    <!-- 특정 고객의 판매 내역 조회 -->
+    <select id="listSaleByCustomer" parameterType="int" resultType="com.mycom.myapp.dto.SaleDto">
+        SELECT saleid, custid, mobileid, quantity, total_price, sale_date
+        FROM sale
+        WHERE custid = #{custid};
+    </select>
+
+    <!-- 특정 핸드폰의 판매 내역 조회 -->
+    <select id="listSaleByMobile" parameterType="int" resultType="com.mycom.myapp.dto.SaleDto">
+        SELECT saleid, custid, mobileid, quantity, total_price, sale_date
+        FROM sale
+        WHERE mobileid = #{mobileid};
+    </select>
+
+    <!-- 다양한 select 항목들에 대해 유연하게 대응하기 위한 처리 -->
+    <resultMap id="saleMap" type="com.mycom.myapp.dto.SaleDto">
+        <result property="saleid" column="saleid"/>
+        <result property="custid" column="custid"/>
+        <result property="mobileid" column="mobileid"/>
+        <result property="quantity" column="quantity"/>
+        <result property="totalPrice" column="total_price"/>
+        <result property="saleDate" column="sale_date"/>
+    </resultMap>
+
+    <!-- 판매 목록을 특정 매핑 방식으로 조회 -->
+    <select id="listSaleMap" resultMap="saleMap">
+        SELECT saleid, custid, mobileid, quantity, total_price, sale_date
+        FROM sale;
+    </select>
+
+    <!-- 동적 조건을 사용한 판매 조회 -->
+    <select id="listSaleWhereIf" parameterType="map" resultType="com.mycom.myapp.dto.SaleDto">
+        SELECT saleid, custid, mobileid, quantity, total_price, sale_date
+        FROM sale
+        <where>
+
+            <if test="custid != null">
+                custid = #{custid}
+            </if>
+
+            <if test="mobileid != null">
+                AND mobileid = #{mobileid} 
+            </if> 
+
+            <if test="saleDate != null">
+                AND sale_date = #{saleDate}
+            </if>
+
+        </where> 
+    </select>		
+
+</mapper>

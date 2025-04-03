@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mycom.myapp.dao.CustomerDao">
+
+
+	<select id="listCustomerLike" parameterType="string" resultType="com.mycom.myapp.dto.CustomerDto">
+		select custid, name, address, phone, customer_type
+		  from customer
+		 where customer_type like concat('%', #{searchWord}, '%');
+	</select>
+	
+	<!-- 다양한 select 항목들에 대해 유연하게 대응하기 위한 처리 ResultSet 대애한 처리를 유연하게.
+		 여러 테이블 조인한 결과, Dto 의 일부 항목만 처리, 컬럼명이 카멜표기법으로 자동전환이 어려운 경우 .....
+	
+	 -->
+	<resultMap id="customerMap" type="com.mycom.myapp.dto.CustomerDto">
+		<result property="custid" column="custid"/>
+		<result property="name" column="name"/>
+		<result property="customerType" column="customer_type"/><!-- lastName 으로 변경해 본다. -->
+	</resultMap>
+	
+	<select id="listCustomerMap" resultMap="customerMap">
+		select custid, name, customer_type
+		  from customer;
+	</select>
+
+	<select id="listCustomerWhereIf" parameterType="map" resultType="com.mycom.myapp.dto.CustomerDto">
+    select custid, name, address, phone, customer_type
+    from customer
+    <where>
+        <trim prefixOverrides="AND">
+            <if test="name != null">
+                AND name = #{name}
+            </if>
+
+            <if test="customerType != null">
+                AND customer_type = #{customerType} 
+            </if> 
+            <if test="address != null">
+                AND address = #{address}
+            </if>
+        </trim>
+    </where> 
+</select>        
+</mapper>    

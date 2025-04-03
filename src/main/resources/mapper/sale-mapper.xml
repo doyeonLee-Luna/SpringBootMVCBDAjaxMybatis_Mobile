@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mycom.myapp.dao.SaleDao">
+
+    <!-- 판매 목록 조회 -->
+    <select id="listSale" resultType="com.mycom.myapp.dto.SaleDto">
+        SELECT saleid, custid, mobileid, quantity, total_price, sale_date
+        FROM sale;
+    </select>
+
+    <!-- 판매 상세 조회 -->
+    <select id="detailSale" parameterType="int" resultType="com.mycom.myapp.dto.SaleDto">
+        SELECT saleid, custid, mobileid, quantity, total_price, sale_date
+        FROM sale
+        WHERE saleid = #{saleid};
+    </select>
+
+    <!-- 판매 등록 -->
+    <insert id="insertSale" parameterType="com.mycom.myapp.dto.SaleDto">
+        INSERT INTO sale (custid, mobileid, quantity, total_price, sale_date)
+        VALUES (#{custid}, #{mobileid}, #{quantity}, #{totalPrice}, #{saleDate});
+    </insert>
+
+    <!-- 판매 수정 -->
+    <update id="updateSale" parameterType="com.mycom.myapp.dto.SaleDto">
+        UPDATE sale
+        SET custid = #{custid},
+            mobileid = #{mobileid},
+            quantity = #{quantity},
+            total_price = #{totalPrice},
+            sale_date = #{saleDate}
+        WHERE saleid = #{saleid};
+    </update>
+
+    <!-- 판매 삭제 -->
+    <delete id="deleteSale" parameterType="int">
+        DELETE FROM sale WHERE saleid = #{saleid};
+    </delete>
+
+</mapper>

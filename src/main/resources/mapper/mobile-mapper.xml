@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mycom.myapp.dao.MobileDao">
+
+
+    <!-- 모바일 목록 조회 -->
+    <select id="listMobile" resultType="com.mycom.myapp.dto.MobileDto">
+        SELECT mobileid, brand, model, price, stock, mobile_type
+        FROM mobile;
+    </select>
+
+    <!-- 모바일 상세 조회 -->
+    <select id="detailMobile" resultType="com.mycom.myapp.dto.MobileDto" parameterType="int">
+        SELECT mobileid, brand, model, price, stock, mobile_type
+        FROM mobile
+        WHERE mobileid = #{mobileid};
+    </select>
+
+    <!-- 모바일 등록 -->
+    <insert id="insertMobile" parameterType="com.mycom.myapp.dto.MobileDto">
+        INSERT INTO mobile (mobileid, brand, model, price, stock, mobile_type)
+        VALUES (#{mobileid}, #{brand}, #{model}, #{price}, #{stock}, #{mobileType});
+    </insert>
+
+    <!-- 모바일 정보 수정 -->
+    <update id="updateMobile" parameterType="com.mycom.myapp.dto.MobileDto">
+        UPDATE mobile
+        SET brand = #{brand},
+            model = #{model},
+            price = #{price},
+            stock = #{stock},
+            mobile_type = #{mobileType}
+        WHERE mobileid = #{mobileid};
+    </update>
+
+    <!-- 모바일 삭제 -->
+    <delete id="deleteMobile" parameterType="int">
+        DELETE FROM mobile WHERE mobileid = #{mobileid};
+    </delete>
+    
+
+
+</mapper>
